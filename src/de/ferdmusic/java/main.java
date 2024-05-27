@@ -1,4 +1,4 @@
-package src.de.ferdmusic;
+package src.de.ferdmusic.java;
 
 public class main {
     public static void main(String[] args) {

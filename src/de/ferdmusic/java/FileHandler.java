@@ -1,4 +1,4 @@
-package src.de.ferdmusic;
+package src.de.ferdmusic.java;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -63,12 +63,12 @@ public class FileHandler {
     }
 
     public void copyTemplate() {
-        String currentDir = System.getProperty("user.dir");
-        String fileSeparator = System.getProperty("file.separator");
+        String jarPath = System.getProperty("java.class.path");
+        String directoryPath = new File(jarPath).getParent();
 
-        // Construct the relative path to the template directory
-        String relativePath = "src" + fileSeparator + "de" + fileSeparator + "ferdmusic" + fileSeparator + "template";
-        Path srcPath = Paths.get(currentDir, relativePath);
+        // Construct the path to the template directory
+        String templatePath = directoryPath + File.separator + "template";
+        Path srcPath = Paths.get(templatePath);
         Path tgtPath = Paths.get(filepath);
         zielordner = tgtPath;
 
@@ -78,7 +78,6 @@ public class FileHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private void copy(Path source, Path target) {
