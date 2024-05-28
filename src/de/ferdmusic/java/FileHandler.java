@@ -8,10 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-
-import java.util.zip.*;
-
-
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class FileHandler {
     String filepath;
@@ -44,17 +42,14 @@ public class FileHandler {
         file.mkdir();
         filepath = file.getAbsolutePath();
 
-        // Return the path of the created directory
         return file.getAbsolutePath();
     }
 
     public void openFile(String filePath) {
         try {
             if (System.getProperty("os.name").startsWith("Windows")) {
-                // Windows command
                 new ProcessBuilder("cmd", "/c", filePath).start();
             } else {
-                // Assume Unix or Linux
                 new ProcessBuilder("xdg-open", filePath).start();
             }
         } catch (IOException e) {
@@ -66,7 +61,6 @@ public class FileHandler {
         String jarPath = System.getProperty("java.class.path");
         String directoryPath = new File(jarPath).getParent();
 
-        // Construct the path to the template directory
         String templatePath = directoryPath + File.separator + "template";
         Path srcPath = Paths.get(templatePath);
         Path tgtPath = Paths.get(filepath);
@@ -83,7 +77,6 @@ public class FileHandler {
     private void copy(Path source, Path target) {
         try {
             Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -91,14 +84,13 @@ public class FileHandler {
 
     public void createContent(Path target, String header, String text) {
         try {
-            FileWriter writer = new FileWriter(target + "/content.xml");
+            FileWriter writer = new FileWriter(target.resolve("content.xml").toString());
             writer.write(dh.createMainContent(header, text));
             writer.close();
             System.out.println("Datei wurde erstellt");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public Path getZielordner() {
@@ -106,15 +98,12 @@ public class FileHandler {
     }
 
     public void zipFolder() {
-        // Pfad zum Zielordner
         Path sourceDirPath = Paths.get(filepath);
-
-        // Pfad zur ZIP-Datei
         Path zipFilePath = Paths.get(filepath + ".zip");
 
         try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFilePath.toFile()))) {
             Files.walk(sourceDirPath).filter(path -> !Files.isDirectory(path)).forEach(path -> {
-                ZipEntry zipEntry = new ZipEntry(sourceDirPath.relativize(path).toString());
+                ZipEntry zipEntry = new ZipEntry(sourceDirPath.relativize(path).toString().replace(File.separator, "/"));
                 try {
                     zos.putNextEntry(zipEntry);
                     Files.copy(path, zos);
@@ -127,7 +116,6 @@ public class FileHandler {
             System.err.println("Fehler beim Erstellen der ZIP-Datei: " + e);
         }
 
-        // Ändern Sie die Dateiendung in .odt
         File zipFile = zipFilePath.toFile();
         File odtFile = new File(zipFilePath.toString().replace(".zip", ".odt"));
         boolean renamed = zipFile.renameTo(odtFile);
