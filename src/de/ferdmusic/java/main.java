@@ -1,5 +1,7 @@
 package src.de.ferdmusic.java;
 
+import java.util.Scanner;
+
 public class main {
     public static void main(String[] args) {
         System.out.println("Bitte gebe die Überschrift ein \n");
@@ -15,6 +17,7 @@ public class main {
     }
 
     public static String cin() {
-        return System.console().readLine();
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
     }
 }
