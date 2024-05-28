@@ -3,6 +3,9 @@ package src.de.ferdmusic.java;
 import java.util.Scanner;
 
 public class main {
+
+    private static final Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) {
         System.out.println("Bitte gebe die Überschrift ein \n");
         String ueberschrift = cin();
@@ -10,14 +13,9 @@ public class main {
         String text = cin();
 
         FileHandler fh = new FileHandler(ueberschrift, text);
-//        String test = fh.createFolder(ueberschrift);
-//        System.out.println(test);
-//        fh.copyTemplate();
-//        fh.createContent(fh.getZielordner(),ueberschrift,text);
     }
 
     public static String cin() {
-        Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
 }
